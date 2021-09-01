@@ -1,6 +1,7 @@
 package com.m1.diretodaroca.model;
 
 import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Builder
 @Table(name = "seller_product")
+@Entity
 public class SellerProduct {
 
     @Id
@@ -26,10 +28,14 @@ public class SellerProduct {
     private BigDecimal price;
 
     @NotNull
-    @Column(updatable = false)
-    private Date createAt;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
 
     @NotNull
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updateAt")
     private Date updateAt;
 }

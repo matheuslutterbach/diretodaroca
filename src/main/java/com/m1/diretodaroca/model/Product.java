@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @Builder
 @Table(name = "product")
+@Entity
 public class Product {
 
     @Id
@@ -28,7 +29,7 @@ public class Product {
 
     @NotNull
     @Column(updatable = false)
-    private Date createAt;
+    private Date createdAt;
 
     @NotNull
     @UpdateTimestamp

@@ -2,6 +2,7 @@ package com.m1.diretodaroca.model;
 
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Data
 @Builder
 @Table(name = "customer")
+@Entity
 public class Customer {
 
     @Id
@@ -33,13 +35,17 @@ public class Customer {
 
     @NotBlank
     @Size(max = 20)
-    private String telefone;
+    private String phone;
 
     @NotNull
-    @Column(updatable = false)
-    private Date createAt;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
 
     @NotNull
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_at")
     private Date updateAt;
 }
