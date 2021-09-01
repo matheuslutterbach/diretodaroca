@@ -1,6 +1,7 @@
 package com.m1.diretodaroca.service;
 
 import com.m1.diretodaroca.dto.CustomerDTO;
+import com.m1.diretodaroca.exception.BusinessException;
 import com.m1.diretodaroca.exception.GeneralException;
 import com.m1.diretodaroca.model.Customer;
 import com.m1.diretodaroca.repository.CustomerRepository;
@@ -35,5 +36,11 @@ public class CustomerService {
             log.error("Erro create customer", e);
             throw new GeneralException("Error create customer");
         }
+    }
+
+    public Customer findById(Long customerId) {
+        return repository.findById(customerId)
+                .orElseThrow(() ->
+                        new BusinessException("Customer not found by id"));
     }
 }
