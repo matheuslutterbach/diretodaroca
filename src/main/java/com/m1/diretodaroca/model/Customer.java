@@ -1,7 +1,9 @@
 package com.m1.diretodaroca.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "customer")
 @Entity
 public class Customer {
@@ -46,6 +50,6 @@ public class Customer {
     @NotNull
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_at")
-    private Date updateAt;
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }

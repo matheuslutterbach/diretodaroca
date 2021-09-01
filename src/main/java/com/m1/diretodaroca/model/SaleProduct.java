@@ -8,38 +8,32 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product")
+@Table(name = "sale_product")
 @Entity
-public class Product {
+public class SaleProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 256)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "id_sale")
+    private Sale sale;
 
-    @Size(max = 100)
-    private String description;
-
-    @NotBlank
-    @Size(max = 100)
-    private String unit;
+    @ManyToOne
+    @JoinColumn(name = "id_product")
+    private Product product;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "product_type")
-    private ProductType productType;
+    private BigDecimal price;
 
     @NotNull
     @CreationTimestamp

@@ -1,7 +1,9 @@
 package com.m1.diretodaroca.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "address")
 @Entity
 public class Address {
@@ -22,11 +26,20 @@ public class Address {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "id_customer")
     private Customer customer;
 
     @Size(max = 256)
     @NotBlank
     private String street;
+
+    @NotBlank
+    @Size(max = 3)
+    private String number;
+
+    @NotBlank
+    @Size(max = 100)
+    private String neighborhood;
 
     @Size(max = 8)
     @NotBlank
@@ -41,14 +54,6 @@ public class Address {
     @NotBlank
     private String state;
 
-    @NotBlank
-    @Size(max = 3)
-    private String number;
-
-    @NotBlank
-    @Size(max = 100)
-    private String neighborhood;
-
     @NotNull
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -58,6 +63,6 @@ public class Address {
     @NotNull
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updateAt")
-    private Date updateAt;
+    @Column(name = "updated_At")
+    private Date updatedAt;
 }

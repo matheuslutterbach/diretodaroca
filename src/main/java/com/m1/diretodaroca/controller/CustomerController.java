@@ -5,6 +5,7 @@ import com.m1.diretodaroca.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid CustomerDTO dto) {
+    public ResponseEntity<?> create(@RequestBody @Valid CustomerDTO dto) {
         customerService.create(dto);
         URI location = URI.create("/customer");
         return ResponseEntity.created(location).build();

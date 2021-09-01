@@ -1,6 +1,9 @@
 package com.m1.diretodaroca.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,7 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "seller_product")
 @Entity
 public class SellerProduct {
@@ -19,9 +25,11 @@ public class SellerProduct {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "id_seller")
     private Seller seller;
 
     @ManyToOne
+    @JoinColumn(name = "id_product")
     private Product product;
 
     @NotNull
@@ -36,6 +44,6 @@ public class SellerProduct {
     @NotNull
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updateAt")
-    private Date updateAt;
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }
