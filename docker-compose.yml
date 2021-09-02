@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  mysqldb:
+    container_name: diretodaroca-mysqldb
+    image: mysql:5.7.22
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: diretodaroca
+      MYSQL_PASSWORD: diretodaroca!123
+      MYSQL_DATABASE: direto_da_roca
+      TZ: America/Sao_Paulo
+    networks:
+      - network
+      
+networks:
+  network:
+    driver: bridge
