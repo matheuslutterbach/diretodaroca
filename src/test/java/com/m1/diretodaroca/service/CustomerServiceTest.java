@@ -29,16 +29,16 @@ public class CustomerServiceTest {
     void create_shouldSave_withSuccess() {
         CustomerDTO dto = CustomerDTO.builder()
                 .cpf("15832556720")
-                .name("Matheus")
-                .email("matheuslutterbach@gmail.com")
+                .name("Bill")
+                .email("bill@email.com")
                 .phone("22998828358")
                 .build();
 
         Customer customerMock = Customer
                 .builder()
                 .cpf("15832556720")
-                .name("Matheus")
-                .email("matheuslutterbach@gmail.com")
+                .name("Bill")
+                .email("bill@email.com")
                 .phone("22998828358")
                 .build();
 
@@ -58,16 +58,16 @@ public class CustomerServiceTest {
     void create_shouldThrowGeneralException_whenSaveReturnError() {
         CustomerDTO dto = CustomerDTO.builder()
                 .cpf("15832556720")
-                .name("Matheus")
-                .email("matheuslutterbach@gmail.com")
+                .name("Bill")
+                .email("bill@email.com")
                 .phone("22998828358")
                 .build();
 
         Customer customerMock = Customer
                 .builder()
                 .cpf("15832556720")
-                .name("Matheus")
-                .email("matheuslutterbach@gmail.com")
+                .name("Bill")
+                .email("bill@email.com")
                 .phone("22998828358")
                 .build();
 
@@ -86,8 +86,8 @@ public class CustomerServiceTest {
                 .builder()
                 .id(1L)
                 .cpf("15832556720")
-                .name("Matheus")
-                .email("matheuslutterbach@gmail.com")
+                .name("Bill")
+                .email("bill@email.com")
                 .phone("22998828358")
                 .build();
 
