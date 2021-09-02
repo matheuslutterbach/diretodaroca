@@ -10,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
+
+import static java.util.Objects.*;
+
 @Service
 @Slf4j
 public class AddressService {
@@ -46,6 +51,22 @@ public class AddressService {
         } catch (Exception e) {
             log.error("Unexpected error create address", e);
             throw new GeneralException("Unexpected error create address");
+        }
+    }
+
+    public List<Address> findByCustomer(Long idCustomer) {
+        try {
+            if (isNull(idCustomer)) {
+                throw new BusinessException("IdCustomer is null");
+            }
+
+            return addressRepository.findByCustomer(idCustomer);
+        } catch (BusinessException e) {
+            log.error(e.getMessage());
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new GeneralException("Unexpected error find customer by id");
         }
     }
 }

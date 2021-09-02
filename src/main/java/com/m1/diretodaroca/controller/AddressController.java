@@ -2,16 +2,15 @@ package com.m1.diretodaroca.controller;
 
 
 import com.m1.diretodaroca.dto.AddressDTO;
+import com.m1.diretodaroca.model.Address;
 import com.m1.diretodaroca.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/address")
@@ -29,5 +28,11 @@ public class AddressController {
         addressService.create(dto);
         URI location = URI.create("/address");
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/customer/{id_customer}")
+    public ResponseEntity<?> findByCustomer(@PathVariable("id_customer") Long idCustomer) {
+        List<Address> byCustomer = addressService.findByCustomer(idCustomer);
+        return ResponseEntity.ok(byCustomer);
     }
 }

@@ -15,6 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,7 +94,7 @@ public class AddressServiceTest {
                 .thenThrow(new BusinessException("Customer not found by id"));
 
         Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.create(addressDTO));
-        assertEquals(BusinessException.class, exception.getClass());
+
         assertEquals("Customer not found by id", exception.getMessage());
     }
 
@@ -120,7 +123,51 @@ public class AddressServiceTest {
                 .thenThrow(new RuntimeException());
 
         Throwable exception = Assert.assertThrows(GeneralException.class, () -> addressService.create(addressDTO));
-        assertEquals(GeneralException.class, exception.getClass());
+
         assertEquals("Unexpected error create address", exception.getMessage());
+    }
+
+    @Test
+    void findByCustomer_shouldFind_withSuccess() {
+        Long idCustomer = 1L;
+        Address address = Address
+                .builder()
+                .id(1L)
+                .street("Street A")
+                .neighborhood("Local")
+                .number("42")
+                .build();
+
+        List<Address> addressList = List.of(address);
+
+        when(addressRepository.findByCustomer(idCustomer)).thenReturn(addressList);
+
+        List<Address> addressByCustomer = addressService.findByCustomer(idCustomer);
+
+        assertEquals(addressByCustomer.get(0).getId(), 1L);
+        assertEquals(addressByCustomer.get(0).getStreet(), "Street A");
+        assertEquals(addressByCustomer.get(0).getNumber(), "42");
+        assertEquals(addressByCustomer.get(0).getNeighborhood(), "Local");
+        verify(addressRepository, times(1)).findByCustomer(idCustomer);
+    }
+
+    @Test
+    void findByCustomer_shouldThrowBusinessException_whenIdCustomerIsNull() {
+        Long idCustomer = null;
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.findByCustomer(idCustomer));
+
+        assertEquals("IdCustomer is null", exception.getMessage());
+    }
+
+    @Test
+    void findByCustomer_shouldThrowGeneralException_whenFindAdressByCustomerReturnError() {
+        Long idCustomer = 1L;
+
+        when(addressRepository.findByCustomer(idCustomer)).thenThrow(RuntimeException.class);
+
+        Throwable exception = Assert.assertThrows(GeneralException.class, () -> addressService.findByCustomer(idCustomer));
+
+        assertEquals("Unexpected error find customer by id", exception.getMessage());
     }
 }
