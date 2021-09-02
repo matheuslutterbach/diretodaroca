@@ -34,12 +34,14 @@ public class AddressService {
                     .zipCode(dto.getZipCode())
                     .city(dto.getCity())
                     .street(dto.getStreet())
+                    .state(dto.getState())
                     .customer(customer)
                     .build();
 
             return addressRepository.save(address);
 
         } catch (BusinessException e) {
+            log.error(e.getMessage());
             throw new BusinessException(e.getMessage());
         } catch (Exception e) {
             log.error("Unexpected error create address", e);
