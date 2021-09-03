@@ -30,6 +30,12 @@ public class AddressController {
         return ResponseEntity.created(location).build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") Long idAddress, @RequestBody AddressDTO dto) {
+        addressService.update(idAddress, dto);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/customer/{id_customer}")
     public ResponseEntity<?> findByCustomer(@PathVariable("id_customer") Long idCustomer) {
         List<Address> byCustomer = addressService.findByCustomer(idCustomer);

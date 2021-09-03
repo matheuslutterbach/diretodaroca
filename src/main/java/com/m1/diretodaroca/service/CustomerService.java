@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.isNull;
+
 
 @Service
 @Slf4j
@@ -42,5 +44,28 @@ public class CustomerService {
         return repository.findById(customerId)
                 .orElseThrow(() ->
                         new BusinessException("Customer not found by id"));
+    }
+
+    public Customer update(Long idCustomer, CustomerDTO dto) {
+        try {
+            if (isNull(idCustomer)) {
+                throw new BusinessException("IdCustomer is null");
+            }
+
+            Customer customer = this.findById(idCustomer);
+
+            customer.setName(dto.getName());
+            customer.setCpf(dto.getCpf());
+            customer.setEmail(dto.getEmail());
+            customer.setPhone(dto.getPhone());
+
+            return repository.save(customer);
+        } catch (BusinessException e) {
+            log.error(e.getMessage());
+            throw new BusinessException(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new GeneralException("Unexpected error update customer");
+        }
     }
 }

@@ -4,10 +4,7 @@ import com.m1.diretodaroca.dto.CustomerDTO;
 import com.m1.diretodaroca.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -28,5 +25,11 @@ public class CustomerController {
         customerService.create(dto);
         URI location = URI.create("/customer");
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") Long idCustomer, CustomerDTO dto) {
+        customerService.update(idCustomer,dto);
+        return ResponseEntity.ok().build();
     }
 }

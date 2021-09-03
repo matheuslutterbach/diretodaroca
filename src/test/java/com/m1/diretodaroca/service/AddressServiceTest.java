@@ -170,4 +170,148 @@ public class AddressServiceTest {
 
         assertEquals("Unexpected error find customer by id", exception.getMessage());
     }
+
+    @Test
+    void update_withSuccess() {
+        Long idCustomer = 1L;
+        Long idAdress = 2L;
+
+        Customer customerMock = Customer.builder()
+                .id(1L)
+                .name("Jason")
+                .build();
+
+        AddressDTO dto = AddressDTO.builder()
+                .customerId(idCustomer)
+                .street("Street A")
+                .city("Austin")
+                .number("243")
+                .neighborhood("Local 0")
+                .zipCode("28640000")
+                .state("TX")
+                .build();
+
+        Address addressMock = Address.builder()
+                .customer(customerMock)
+                .street("Street B")
+                .city("Austin")
+                .number("244")
+                .neighborhood("Local 1")
+                .zipCode("28640000")
+                .state("TX")
+                .build();
+
+
+        when(customerService.findById(idCustomer)).thenReturn(customerMock);
+        when(addressRepository.findById(idAdress)).thenReturn(Optional.of(addressMock));
+        when(addressRepository.save(addressMock)).thenReturn(addressMock);
+
+        Address address = addressService.update(idAdress, dto);
+
+        assertEquals(dto.getCustomerId(), addressMock.getCustomer().getId());
+        assertEquals(dto.getStreet(), addressMock.getStreet());
+        assertEquals(dto.getNeighborhood(), addressMock.getNeighborhood());
+        assertEquals(dto.getNumber(), addressMock.getNumber());
+        assertEquals(dto.getZipCode(), addressMock.getZipCode());
+        assertEquals(dto.getCity(), addressMock.getCity());
+        assertEquals(dto.getState(), addressMock.getState());
+
+        verify(customerService, times(1)).findById(idCustomer);
+        verify(addressRepository, times(1)).save(address);
+    }
+
+
+    @Test
+    void update_shouldThrowBusinessException_whenIdAdressIsNull() {
+        Long idAddress = null;
+        AddressDTO dto = AddressDTO.builder()
+                .build();
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.update(idAddress, dto));
+
+        assertEquals("idAddress is null", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenIdCustomerIsNull() {
+        Long idAddress = 1L;
+        Long idCustomer = null;
+        AddressDTO dto = AddressDTO.builder()
+                .customerId(idCustomer)
+                .build();
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.update(idAddress, dto));
+
+        assertEquals("IdCustomer is null", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenFindByCustomerReturnError() {
+        Long idAddress = 1L;
+        Long idCustomer = 1L;
+        AddressDTO dto = AddressDTO.builder()
+                .customerId(idCustomer)
+                .build();
+
+       when(customerService.findById(idCustomer)).thenThrow(new BusinessException("Customer not found by id"));
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.update(idAddress, dto));
+
+        assertEquals("Customer not found by id", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenFindByIdReturnError() {
+        Long idAddress = 1L;
+        Long idCustomer = 1L;
+
+        Customer customerMock = Customer.builder()
+                .id(idCustomer)
+                .name("Jason")
+                .build();
+
+        AddressDTO dto = AddressDTO.builder()
+                .customerId(idCustomer)
+                .build();
+
+        when(customerService.findById(idCustomer)).thenReturn(customerMock);
+        when(addressRepository.findById(idAddress)).thenThrow(new BusinessException("Address not found by id"));
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> addressService.update(idAddress, dto));
+
+        assertEquals("Address not found by id", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenSaveReturnError() {
+        Long idAddress = 1L;
+        Long idCustomer = 1L;
+
+        Customer customerMock = Customer.builder()
+                .id(idCustomer)
+                .name("Jason")
+                .build();
+
+        AddressDTO dto = AddressDTO.builder()
+                .customerId(idCustomer)
+                .build();
+
+        Address addressMock = Address.builder()
+                .customer(customerMock)
+                .street("Street B")
+                .city("Austin")
+                .number("244")
+                .neighborhood("Local 1")
+                .zipCode("28640000")
+                .state("TX")
+                .build();
+
+        when(customerService.findById(idCustomer)).thenReturn(customerMock);
+        when(addressRepository.findById(idAddress)).thenReturn(Optional.of(addressMock));
+        when(addressRepository.save((any(Address.class)))).thenThrow(new RuntimeException());
+
+        Throwable exception = Assert.assertThrows(GeneralException.class, () -> addressService.update(idAddress, dto));
+
+        assertEquals("Unexpected error update address", exception.getMessage());
+    }
 }
