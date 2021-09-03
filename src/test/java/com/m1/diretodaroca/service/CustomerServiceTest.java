@@ -110,4 +110,94 @@ public class CustomerServiceTest {
         Throwable exception = Assert.assertThrows(BusinessException.class, () -> customerService.findById(id));
         assertEquals("Customer not found by id", exception.getMessage());
     }
+
+    @Test
+    void update_withSucess() {
+        Long idCustomer = 1L;
+        CustomerDTO dto = CustomerDTO.builder()
+                .name("Bill")
+                .cpf("15832556720")
+                .email("bil@email.com")
+                .phone("22998828358")
+                .build();
+
+        Customer customerMock = Customer.builder()
+                .id(1L)
+                .name("Jason")
+                .cpf("15832556720")
+                .email("jason@email.com")
+                .phone("22998828358")
+                .build();
+
+        when(customerRepository.findById(idCustomer)).thenReturn(Optional.of(customerMock));
+        when(customerRepository.save(customerMock)).thenReturn(customerMock);
+
+        Customer customer = customerService.update(idCustomer, dto);
+
+        assertEquals(dto.getName(), customerMock.getName());
+        assertEquals(dto.getCpf(), customerMock.getCpf());
+        assertEquals(dto.getEmail(), customerMock.getEmail());
+        assertEquals(dto.getPhone(), customerMock.getPhone());
+
+        verify(customerRepository, times(1)).findById(idCustomer);
+        verify(customerRepository, times(1)).save(customer);
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenIdCustomerIsNull() {
+        Long idCustomer = null;
+        CustomerDTO dto = CustomerDTO.builder()
+                .name("Bill")
+                .cpf("15832556720")
+                .email("bil@email.com")
+                .phone("22998828358")
+                .build();
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> customerService.update(idCustomer, dto));
+
+        assertEquals("IdCustomer is null", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowBusinessException_whenFindByIdReturnError() {
+        Long idCustomer = 1L;
+        CustomerDTO dto = CustomerDTO.builder()
+                .name("Bill")
+                .cpf("15832556720")
+                .email("bil@email.com")
+                .phone("22998828358")
+                .build();
+
+        Throwable exception = Assert.assertThrows(BusinessException.class, () -> customerService.update(idCustomer, dto));
+
+        assertEquals("Customer not found by id", exception.getMessage());
+    }
+
+    @Test
+    void update_shouldThrowGeneralException_whenSaveReturnError() {
+        Long idCustomer = 1L;
+        CustomerDTO dto = CustomerDTO.builder()
+                .name("Bill")
+                .cpf("15832556720")
+                .email("bil@email.com")
+                .phone("22998828358")
+                .build();
+
+        Customer customerMock = Customer
+                .builder()
+                .id(1L)
+                .cpf("15832556720")
+                .name("Bill")
+                .email("bill@email.com")
+                .phone("22998828358")
+                .build();
+
+
+        when(customerRepository.findById(idCustomer)).thenReturn(Optional.of(customerMock));
+        when(customerRepository.save(customerMock)).thenThrow(RuntimeException.class);
+
+        Throwable exception = Assert.assertThrows(GeneralException.class, () -> customerService.update(idCustomer, dto));
+
+        assertEquals("Unexpected error update customer", exception.getMessage());
+    }
 }
