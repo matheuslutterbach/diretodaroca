@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS product (
     id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name            BIGINT       NOT NULL,
+    name            VARCHAR(256)       NOT NULL,
     description     VARCHAR(100)         ,
     unit            VARCHAR(100) NOT NULL,
     product_type    VARCHAR(100) NOT NULL,
